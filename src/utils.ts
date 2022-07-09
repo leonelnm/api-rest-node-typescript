@@ -1,4 +1,4 @@
-import { Visibility, Weather } from './types'
+import { Visibility, Weather } from './enums'
 
 export const isString = (string: any): boolean => {
   return typeof string === 'string' || string instanceof String
