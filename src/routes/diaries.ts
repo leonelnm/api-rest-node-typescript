@@ -16,7 +16,7 @@ router.get('/:id', (req, res) => {
     : res.sendStatus(404)
 })
 
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
   try {
     const newDiaryEntry = toNewDiaryEntry(req.body)
 
@@ -24,7 +24,10 @@ router.post('/', (req, res) => {
 
     res.send(addedDiaryEntry)
   } catch (e: any) {
-    res.status(400).send(e.message)
+    // res.status(400).send(e.message)
+    console.log('e is type:', typeof e)
+
+    next(e)
   }
 })
 

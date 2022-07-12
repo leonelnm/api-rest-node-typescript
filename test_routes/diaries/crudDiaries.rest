@@ -12,7 +12,7 @@ content-type: application/json
 
 {
     "date": "2022-09-07",
-    "weather": "sunny",
+    "weather": "sunnys",
     "visibility": "good",
     "comment": "Awesome day!"
 }
