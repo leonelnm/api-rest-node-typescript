@@ -1,20 +1,19 @@
-import morgan from 'morgan'
-import { Request, Response } from 'express'
+import morgan, { StreamOptions } from 'morgan'
 import config from './config'
 import Logger from './logger'
 
-morgan.token('message', (_req: Request, res: Response) => res.locals.errorMessage != null ? res.locals.errorMessage : '')
+const stream: StreamOptions = {
+  write: (message) => Logger.http(message)
+}
 
-const getIpFormat = (): string => (config.env === 'production' ? ':remote-addr - ' : '')
-const successResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms`
-const errorResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms - message: :message`
+const skip = (): boolean => {
+  const env = config.env
+  return env !== 'DEV'
+}
 
-export const successHandler = morgan(successResponseFormat, {
-  skip: (_req: Request, res: Response) => res.statusCode >= 400,
-  stream: { write: (message) => Logger.info(message.trim()) }
-})
+const morganMiddleware = morgan(
+  ':method :url :status :res[content-length] - :response-time ms',
+  { stream, skip }
+)
 
-export const errorHandler = morgan(errorResponseFormat, {
-  skip: (_req: Request, res: Response) => res.statusCode < 400,
-  stream: { write: (message) => Logger.error(message.trim()) }
-})
+export default morganMiddleware
